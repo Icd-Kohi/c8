@@ -13,40 +13,6 @@ namespace Chip8{
     const u8 VIDEO_WIDTH = 64;
     const u8 VIDEO_HEIGHT = 32;
 
-    
-    /*  ------------ SCREEN STARTS AS: -------------
-     *  11110000 10010000 10010000 10010000 11110000  // 0
-     *  00100000 01100000 00100000 00100000 01110000  // 1
-     *  11110000 00010000 11110000 10000000 11110000  // 2
-     *  11110000 00010000 11110000 00010000 11110000  // 3
-     *  10010000 10010000 11110000 00010000 00010000  // 4
-     *  11110000 10000000 11110000 00010000 11110000  // 5
-     *  11110000 10000000 11110000 10010000 11110000  // 6
-     *  11110000 00010000 00100000 01000000 01000000  // 7
-     *  11110000 10010000 11110000 10010000 11110000  // 8
-     *  11110000 10010000 11110000 00010000 11110000  // 9
-     *  11110000 10010000 11110000 10010000 10010000  // A
-     *  11100000 10010000 11100000 10010000 11100000  // B
-     *  11110000 10000000 10000000 10000000 11110000  // C
-     *  11100000 10010000 10010000 10010000 11100000  // D
-     *  11110000 10000000 11110000 10000000 11110000  // E
-     *  11110000 10000000 11110000 10000000 10000000  // F
-     *  
-     *  ------------ Representation  -----------
-     *  11110000 // 0
-     *  10010000
-     *  10010000 
-     *  10010000 
-     *  11110000  
-     *
-     *  00100000 
-     *  01100000 
-     *  00100000 
-     *  00100000 
-     *  01110000  // 1
-     *
-     */
-
     u8 fontset[FONTSET_SIZE] = {
         0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
         0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -73,6 +39,62 @@ namespace Chip8{
                 pc = START_ADDRESS;
 
                 randByte = std::uniform_int_distribution<uint8_t>(0, 255U);                
+
+                // When all opcode in the table is different.
+                table[0x0] = &Chip8::Table0;
+                table[0x1] = &Chip8::OP_1nnn;
+                table[0x2] = &Chip8::OP_2nnn;
+                table[0x3] = &Chip8::OP_3xkk;
+                table[0x4] = &Chip8::OP_4xkk;
+                table[0x5] = &Chip8::OP_5xy0;
+                table[0x6] = &Chip8::OP_6xkk;
+                table[0x7] = &Chip8::OP_7xkk;
+                table[0x8] = &Chip8::Table8;
+                table[0x9] = &Chip8::OP_9xy0;
+                table[0xA] = &Chip8::OP_Annn;
+                table[0xB] = &Chip8::OP_Bnnn;
+                table[0xC] = &Chip8::OP_Cxkk;
+                table[0xD] = &Chip8::OP_Dxyn;
+                table[0xE] = &Chip8::TableE;
+                table[0xF] = &Chip8::TableF;
+
+                for(size_t i = 0; i <= 0xE; ++i){
+                    table0[i] = &Chip8::OP_NULL;
+                    table8[i] = &Chip8::OP_NULL;
+                    tableE[i] = &Chip8::OP_NULL;
+                }
+
+                // When the first three digits are $00E but the fourth is unique.
+                table0[0x0] = &Chip8::OP_00E0; 
+                table0[0xE] = &Chip8::OP_00EE; 
+
+                // The first digit repeats but the last digit are unique.
+                table8[0x0] = &Chip8::OP_8xy0;
+                table8[0x1] = &Chip8::OP_8xy1;
+                table8[0x2] = &Chip8::OP_8xy2;
+                table8[0x3] = &Chip8::OP_8xy3;
+                table8[0x4] = &Chip8::OP_8xy4;
+                table8[0x5] = &Chip8::OP_8xy5;
+                table8[0x6] = &Chip8::OP_8xy6;
+                table8[0x7] = &Chip8::OP_8xy7;
+                table8[0xE] = &Chip8::OP_8xyE;
+
+                tableE[0x1] = &Chip8::OP_ExA1;
+                tableE[0xE] = &Chip8::OP_Ex9E;
+
+                // When the first digit repeats but the last two digits is unique.
+                for(size_t i = 0; i <= 0x65; ++i){
+                    tableF[i] = &Chip8::OP_NULL;
+                }
+                tableF[0x07] = &Chip8::OP_Fx07;
+                tableF[0x0A] = &Chip8::OP_Fx0A;
+                tableF[0x15] = &Chip8::OP_Fx15;
+                tableF[0x18] = &Chip8::OP_Fx18;
+                tableF[0x1E] = &Chip8::OP_Fx1E;
+                tableF[0x29] = &Chip8::OP_Fx29;
+                tableF[0x33] = &Chip8::OP_Fx33;
+                tableF[0x55] = &Chip8::OP_Fx55;
+                tableF[0x65] = &Chip8::OP_Fx65;
             }
 
             u8                                  registers[16]{};
@@ -89,6 +111,7 @@ namespace Chip8{
             u8                                  keypad[16]{};
             u32                                 video[64 * 32]{}; // 2048
             u16                                 opcode;
+
 
             // RNG (Could be achieved by hardware)
             std::default_random_engine          randGen;
@@ -131,6 +154,31 @@ namespace Chip8{
             void OP_Fx33();
             void OP_Fx55();
             void OP_Fx65();
+            
+            // Table functions
+            void Table0(){
+                ((*this).*(table0[opcode & 0x000Fu]))();
+            }
+            void Table8(){
+
+                ((*this).*(table8[opcode & 0x000Fu]))();
+            }
+            void TableE(){
+                ((*this).*(tableE[opcode & 0x000Fu]))();
+
+            }
+            void TableF(){
+                ((*this).*(tableF[opcode & 0x00FFu]))();
+            }
+            void OP_NULL(){}
+            // Tables
+             
+            typedef void (Chip8::*Chip8Func)();
+            Chip8Func   table[0xF + 1];
+            Chip8Func  table0[0xE + 1];
+            Chip8Func  table8[0xE + 1];
+            Chip8Func  tableE[0xE + 1];
+            Chip8Func tableF[0x65 + 1];
     };
 
     // Initialize PC with a constructor
@@ -163,6 +211,7 @@ namespace Chip8{
 
     /*
      *  ------------ OPCODES --------------
+     * http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
      *      3.1 - Standard Chip-8 Instructions
             00E0 - CLS
             00EE - RET
@@ -214,6 +263,7 @@ namespace Chip8{
         --sp;
         pc = stack[sp];
     }
+
     /*
      * OP 1nnn: Jump to location nnn  -> The program sets the program counter to nnn.
      * "A jump doesn't remember its origin, so no stack interation needed.

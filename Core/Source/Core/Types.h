@@ -16,4 +16,13 @@ typedef int8_t i8;
 typedef int16_t i16;
 typedef int32_t i32;
 
+const u8 FONTSET_SIZE = 80;
+const u16 START_ADDRESS = 0x200;
+const u8 VIDEO_WIDTH = 64;
+const u8 VIDEO_HEIGHT = 32;
+
+// Initialize PC with a constructor
+const u8 FONTSET_START_ADDRESS = 0x50;
+
+
 #endif

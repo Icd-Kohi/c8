@@ -135,7 +135,7 @@ class Chip8 {
         void OP_NULL(){};
 
         // Chip8 cycle
-
+        void Cycle();
 
     private:
         u8                                  registers[16]{};

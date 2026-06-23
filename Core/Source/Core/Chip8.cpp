@@ -538,4 +538,32 @@ void Chip8::OP_Fx65(){
     }
 }
 
+// ------------------ CYCLE ---------------------
+// in Chip8, one Cycle do:
+// Fetch the next instruction as opcode 
+// -> Decode instruction to find the operation that needs to occur 
+// -> Execute instruction.
+void Chip8::Cycle(){
+	// take the 2 bytes from memory[pc] and sum with the 2 bytes of memory[pc+1];
+	opcode = (memory[pc] << 8u) | memory[pc + 1];
+
+	// Increment the pc before we execute anything
+	pc += 2;
+
+	// using the first nibble from opcode to decode and execute instruction
+    // from the pointer to member function call
+	((*this).*(Chip8::table[(opcode & 0xF000u) >> 12u]))();
+
+	// Decrement the delay timer if it's been set
+	if (delayTimer > 0)
+	{
+		--delayTimer;
+	}
+
+	// Decrement the sound timer if it's been set
+	if (soundTimer > 0)
+	{
+		--soundTimer;
+	}
+}
 

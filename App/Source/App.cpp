@@ -1,7 +1,5 @@
+#include "../../Core/Source/Core/Platform.h"
 #include "../../Core/Source/Core/Chip8.h"
-#include "../../Core/Source/Core/Types.h"
-#include "../../Core/Source/Core/Platform.cpp"
-
 #include <chrono>
 #include <iostream>
 
@@ -19,8 +17,10 @@ int main(int argc, char** argv){
 
     Chip8 chip8;
     chip8.LoadROM(romFilename);
+    std::cout << "\nLoading ROM: " <<  romFilename << "...\n";
 
     int videoPitch = sizeof(chip8.video[0]) * VIDEO_WIDTH;
+    std::cout << "Video pitch:  " <<  videoPitch << "\n";
 
     auto lastCycleTime = std::chrono::high_resolution_clock::now();
     bool quit = false;

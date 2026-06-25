@@ -1,9 +1,24 @@
-Emulator
+Chip-8 is a lightweight interpreted programming language, well known in the early 80s as a easy and fast way to play games in low resources environments.
 
+Writing a Chip-8 is still a good way to understand how to manage resources in a limited environment, handle memory, cache, disk and logical operations.
 
+# Images:
+
+`./chip8 <screen-scale> <delay> <ROM File.ch8>`
+
+#### Rush Hour.ch8:
+
+[rush_hour.png](.Images/rush_hour.png)
+
+#### Tetris.ch8:
+
+[Tetris.png](.Images/tetris.png)
+
+# 3.1 - Standard Chip-8 Instructions:
+
+35 Instructions
 
 ```
-    3.1 - Standard Chip-8 Instructions:
             00E0 - CLS
             00EE - RET
             0nnn - SYS addr
@@ -40,3 +55,14 @@ Emulator
             Fx55 - LD [I], Vx
             Fx65 - LD Vx, [I]
 ```
+
+# Dependencies:
+
+`Make, SDL3`
+
+`Used System: Arch Linux 7.0.12-arch1-1`
+
+# References:
+
+https://multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/
+http://devernay.free.fr/hacks/chip8/C8TECH10.HTM

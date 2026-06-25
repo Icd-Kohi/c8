@@ -8,11 +8,11 @@ Writing a Chip-8 is still a good way to understand how to manage resources in a 
 
 #### Rush Hour.ch8:
 
-[rush_hour.png](.Images/rush_hour.png)
+![rush_hour.png](.Images/rush_hour.png)
 
 #### Tetris.ch8:
 
-[Tetris.png](.Images/tetris.png)
+![Tetris.png](.Images/tetris.png)
 
 # 3.1 - Standard Chip-8 Instructions:
 

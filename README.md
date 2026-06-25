@@ -64,5 +64,6 @@ Writing a Chip-8 is still a good way to understand how to manage resources in a 
 
 # References:
 
-https://multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/
-http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
+- https://multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/
+
+- http://devernay.free.fr/hacks/chip8/C8TECH10.HTM

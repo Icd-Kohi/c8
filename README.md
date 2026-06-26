@@ -4,8 +4,6 @@ Writing a Chip-8 is still a good way to understand how to manage resources in a 
 
 # Images:
 
-`./chip8 <screen-scale> <delay> <ROM File.ch8>`
-
 #### Rush Hour.ch8:
 
 ![rush_hour.png](./Images/rush_hour.png)
@@ -13,6 +11,18 @@ Writing a Chip-8 is still a good way to understand how to manage resources in a 
 #### Tetris.ch8:
 
 ![Tetris.png](./Images/tetris.png)
+
+# Dependencies:
+
+`Make, SDL3`
+
+`Used System: Arch Linux 7.0.12-arch1-1`
+
+# Usage:
+
+After compiling the project, run the command below
+
+`./chip8 <screen-scale> <delay> <ROM File.ch8>`
 
 # 3.1 - Standard Chip-8 Instructions:
 
@@ -55,12 +65,6 @@ Writing a Chip-8 is still a good way to understand how to manage resources in a 
             Fx55 - LD [I], Vx
             Fx65 - LD Vx, [I]
 ```
-
-# Dependencies:
-
-`Make, SDL3`
-
-`Used System: Arch Linux 7.0.12-arch1-1`
 
 # References:
 
